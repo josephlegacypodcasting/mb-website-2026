@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/*
+ * Palette lifted from market-better.lovable.app's `:root`, which stores HSL
+ * triplets; converted to hex here. The `mk-` prefix is carried over from the
+ * project this was extracted out of, where these tokens had to coexist with a
+ * second theme.
+ */
+@theme {
+  --color-mk-bg: #efeadc;
+  --color-mk-fg: #161519;
+  --color-mk-card: #ffffff;
+  --color-mk-primary: #432ead;
+  --color-mk-secondary: #ada4d0;
+  /* Part of the source palette; nothing uses it yet. */
+  --color-mk-muted: #e2ddcf;
+  --color-mk-muted-fg: #605e68;
+  --color-mk-accent: #ff4124;
+  --color-mk-border: #b6b5c0;
+  --color-mk-panel-ink: #121212;
+  --color-mk-peach: #ffd9cc;
+
+  --font-display: var(--font-poppins), sans-serif;
+
+  --radius-mk: 0.25rem;
+
+  --shadow-soft: 0 24px 60px -24px rgb(22 21 25 / 0.18);
+  --shadow-panel: 0 34px 80px -28px rgb(255 65 36 / 0.35);
+}
+
+@layer base {
+  /*
+   * Headings carry no size of their own — every one of them is sized with a
+   * utility class, which is how the original is built. Tailwind's preflight
+   * already strips them back, so there is nothing to undo here.
+   */
+  body {
+    background-color: var(--color-mk-bg);
+    color: var(--color-mk-fg);
+    font-family: var(--font-display);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .mk-nav-link {
+    flex-shrink: 0;
+    font-weight: 600;
+    transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mk-nav-link:hover {
+    color: var(--color-mk-accent);
+  }
+
+  /*
+   * The original slider is Radix. A native range input matches it visually
+   * without pulling in the dependency; `--fill` is set inline so the filled
+   * portion of the track follows the value.
+   */
+  .mk-range {
+    appearance: none;
+    width: 100%;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(
+      to right,
+      var(--color-mk-primary) 0 var(--fill, 0%),
+      var(--color-mk-secondary) var(--fill, 0%) 100%
+    );
+    outline: none;
+  }
+
+  .mk-range::-webkit-slider-thumb {
+    appearance: none;
+    height: 1.25rem;
+    width: 1.25rem;
+    border-radius: 9999px;
+    border: 2px solid var(--color-mk-primary);
+    background: var(--color-mk-bg);
+    cursor: pointer;
+  }
+
+  .mk-range::-moz-range-thumb {
+    height: 1.25rem;
+    width: 1.25rem;
+    border-radius: 9999px;
+    border: 2px solid var(--color-mk-primary);
+    background: var(--color-mk-bg);
+    cursor: pointer;
+  }
+
+  .mk-kicker {
+    margin-bottom: 1.25rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-mk-accent);
+  }
+}
