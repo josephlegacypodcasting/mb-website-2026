@@ -2,18 +2,34 @@
 
 import { useState } from "react";
 import { ArrowRight } from "./icons";
+import { submitLead, type LeadStatus } from "@/lib/submit-lead";
 
 /*
  * The footer doubles as the contact section (#contact), which the pricing CTAs
  * anchor to.
  *
- * NOT WIRED TO A BACKEND. The Lovable original posts these fields straight into
- * a Supabase `lead_submissions` table using a publishable key baked into its
- * public bundle. That is deliberately not reproduced here — see the README —
- * so this build cannot silently swallow real leads.
+ * Posts to /api/lead, which forwards to the LeadConnector webhook server-side.
+ * Note this is NOT what the Lovable original does: it writes straight into a
+ * Supabase `lead_submissions` table using a publishable key baked into its
+ * public bundle, which leaves that table open to anyone. See the README.
  */
 export function SiteFooter() {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<LeadStatus>("idle");
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setStatus("sending");
+
+    try {
+      await submitLead(form, "mike");
+      setStatus("sent");
+      form.reset();
+    } catch (error) {
+      console.error(error);
+      setStatus("error");
+    }
+  }
 
   const inputClass =
     "mt-3 h-14 w-full rounded-full border-0 bg-mk-bg px-6 text-mk-fg outline-none focus-visible:ring-2 focus-visible:ring-mk-accent";
@@ -36,13 +52,7 @@ export function SiteFooter() {
           </p>
         </div>
 
-        <form
-          className="space-y-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSubmitted(true);
-          }}
-        >
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <label className="block font-semibold">
             Name <span className="text-mk-accent">*</span>
             <input
@@ -80,15 +90,27 @@ export function SiteFooter() {
 
           <button
             type="submit"
-            className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-mk-accent text-base font-semibold text-white transition-colors hover:bg-mk-accent/90"
+            disabled={status === "sending"}
+            className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-mk-accent text-base font-semibold text-white transition-colors hover:bg-mk-accent/90 disabled:opacity-60"
           >
-            Let&rsquo;s Talk <ArrowRight />
+            {status === "sending" ? (
+              "Sending\u2026"
+            ) : (
+              <>
+                Let&rsquo;s Talk <ArrowRight />
+              </>
+            )}
           </button>
 
-          {submitted && (
-            <p className="text-sm text-white/80">
-              Form not connected yet &mdash; this is a prototype. No data was
-              sent.
+          {status === "sent" && (
+            <p className="text-sm text-white/80" role="status">
+              Thanks &mdash; we&rsquo;ll be in touch shortly.
+            </p>
+          )}
+
+          {status === "error" && (
+            <p className="text-sm font-semibold text-mk-accent" role="alert">
+              Something went wrong. Please try again, or email us directly.
             </p>
           )}
         </form>

@@ -55,20 +55,36 @@ Two dependencies the original pulls in are deliberately not reproduced:
 - **lucide-react** → the three icons actually used are inlined in
   [`components/icons.tsx`](components/icons.tsx).
 
-## The contact form is intentionally inert
+## Contact form
 
-The original posts the contact fields straight into a Supabase `lead_submissions` table
-using a publishable key baked into its public bundle — which means anyone can write to
-that table. That is **not** reproduced here. The form validates and shows a confirmation,
-but sends nothing.
+The form posts to `/api/lead`, a server route that forwards to a LeadConnector
+(GoHighLevel) inbound webhook. Set the destination before running it:
 
-Before wiring it up, three things need an answer: who owns the Supabase project, who
-actually watches the table, and whether row-level security is configured. Until then this
-build cannot silently swallow a real lead.
+```bash
+cp .env.example .env.local   # then fill in LEAD_WEBHOOK_URL
+```
+
+`.env.local` is gitignored, and the variable is **not** `NEXT_PUBLIC_` prefixed, so the
+URL never reaches the client bundle. The webhook is an unauthenticated capability —
+anyone holding it can write leads into the CRM — and this repo is public, so it has to
+stay in the environment. On Vercel, set it in the project's environment variables; if it
+is missing the route returns a 500 and the form shows an error rather than pretending to
+have sent something.
+
+This is deliberately **not** what the Lovable original does. That writes the same fields
+straight into a Supabase `lead_submissions` table using a publishable key baked into its
+public bundle, which leaves the table open to anyone.
+
+Verified end-to-end against a local echo server rather than the live CRM, so no test
+leads were written: valid submissions return 200 with the expected payload, missing or
+malformed fields return 400, over-long fields are truncated to 300 characters, and an
+unreachable webhook returns 502 — the form then shows an error and keeps what the user
+typed instead of clearing it.
 
 ## Verified
 
-Production build is clean — all four routes prerender as static. Checked at 375px and
+Production build is clean — all four pages prerender as static, with `/api/lead` served
+on demand. Checked at 375px and
 768px on every route by sweeping the DOM and comparing each element's
 `getBoundingClientRect().right` against `clientWidth`: zero overflowing elements,
 `scrollWidth === clientWidth`.
