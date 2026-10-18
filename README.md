@@ -1,4 +1,9 @@
-# Market Better — website (Mike's design)
+# Market Better — corporate site
+
+**This is the approved site.** Joseph signed off on this design on 2026-10-18, choosing
+it over an in-house alternative, so this repo is what gets deployed and worked on from
+here. The alternative and the full comparison live in `mb_official_website`, which is
+now a historical record.
 
 Next.js rebuild of the design Mike put together at
 [market-better.lovable.app](https://market-better.lovable.app/).
@@ -8,14 +13,45 @@ It is a **rebuild, not a Lovable export**. The palette was lifted from the origi
 clip-path funnel and ROI formula were taken from the original rather than eyeballed, so
 this matches it rather than approximating it.
 
+## Project status
+
+The site is the time-pressing half of a two-part request from Mike McGrath (Slack,
+2026-10-15); the other half, the Legacy Media → Market Better email migration, is
+tracked separately but shares the domain decisions made here.
+
+**Local review first, then deploy, domains last** — so that "is the site right?", "does
+it deploy?" and "is the cutover safe?" never have to be debugged at the same time.
+
+| Phase | Goal | State |
+|---|---|---|
+| 1 | Rebuild locally, pick a direction | **Done — this design approved 2026-10-18** |
+| 2 | v2 content (team page, design polish) | Backlog |
+| 3 | Deploy to Vercel | Unblocked, not started |
+| 4 | Domain cutover: site → `marketbetter.xyz`, Show relocated | Deferred |
+| 5 | Consolidate onto `marketbetter.io` | Deferred |
+| 6 | Email migration LM → MB on `.io` | Separate project, depends on Phase 5 |
+
+Before Phase 3, `LEAD_WEBHOOK_URL` must be set in the Vercel project — see
+[Contact form](#contact-form).
+
+## Docs
+
+- [Brief](docs/01-brief.md) — Mike's request verbatim, plus interpreted scope
+- [Current state audit](docs/02-current-state.md) — DNS, hosting, what is actually live today
+- [Execution plan](docs/03-plan.md) — phased steps, with the `/show` URL decision called out
+- [Open questions](docs/04-open-questions.md) — what is still needed from Mike / Alej / Anna
+- [Design system](docs/05-design-system.md) — the shipping tokens, and the brand research behind them
+- [Local dev](docs/06-local-dev.md) — how to run it, what is verified, what is still missing
+
 ## Run it
 
 ```bash
 npm install
-npm run dev
+npm run dev -- -p 3200
 ```
 
-<http://localhost:3000>
+<http://localhost:3200> — port 3200 by convention, so it never clashes with
+`mb_official_website` on 3100.
 
 ## Routes
 
