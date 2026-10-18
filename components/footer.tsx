@@ -17,7 +17,7 @@ import { useRoi } from "@/components/roi-context";
 export function SiteFooter() {
   const [status, setStatus] = useState<LeadStatus>("idle");
   // Whatever the prospect modelled in the ROI calculator this visit.
-  const { snapshot } = useRoi();
+  const { snapshot, clearRoi } = useRoi();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -28,6 +28,9 @@ export function SiteFooter() {
       await submitLead(form, "mike", snapshot);
       setStatus("sent");
       form.reset();
+      // The snapshot belongs to this enquiry. Leaving it in place would
+      // attach these figures to the next submission from the same tab.
+      clearRoi();
     } catch (error) {
       console.error(error);
       setStatus("error");

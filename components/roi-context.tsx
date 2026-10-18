@@ -12,14 +12,18 @@ import type { RoiSnapshot } from "@/lib/roi";
 
 /*
  * Carries what a prospect modelled in the ROI calculator over to the contact
- * form, which lives in a different part of the tree — the footer on Mike's
- * version, a CTA section on the in-house one.
+ * form, which lives in the footer.
  *
  * Mounted in the root layout so the snapshot survives client-side navigation:
  * someone can model their numbers on the ROI page, click through to Pricing,
  * and submit there. sessionStorage covers the one case React state does not,
  * a full page reload. It is per-tab and never leaves the browser except on an
  * actual submission.
+ *
+ * A submission CONSUMES the snapshot — `clearRoi` runs on success. Without
+ * that, a second submission from the same tab silently inherits the first
+ * one's figures, which is worse than sending nothing: the lead looks like it
+ * modelled numbers it never touched.
  */
 
 const STORAGE_KEY = "mb:roi-snapshot";
@@ -27,6 +31,7 @@ const STORAGE_KEY = "mb:roi-snapshot";
 type RoiContextValue = {
   snapshot: RoiSnapshot | null;
   reportRoi: (snapshot: RoiSnapshot) => void;
+  clearRoi: () => void;
 };
 
 const RoiContext = createContext<RoiContextValue | null>(null);
@@ -55,7 +60,19 @@ export function RoiProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const value = useMemo(() => ({ snapshot, reportRoi }), [snapshot, reportRoi]);
+  const clearRoi = useCallback(() => {
+    setSnapshot(null);
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Nothing to do — the in-memory snapshot is cleared either way.
+    }
+  }, []);
+
+  const value = useMemo(
+    () => ({ snapshot, reportRoi, clearRoi }),
+    [snapshot, reportRoi, clearRoi],
+  );
 
   return <RoiContext.Provider value={value}>{children}</RoiContext.Provider>;
 }

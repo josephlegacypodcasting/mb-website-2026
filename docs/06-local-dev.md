@@ -113,10 +113,20 @@ between them
 state and a full reload through `sessionStorage`, which is per-tab and never leaves the
 browser except on an actual submission.
 
-**Only a touched calculator is reported.** Here every field starts at zero, so the
-guard matters less than it did while an in-house version with non-zero defaults also
-existed — but it is what makes `roi_used: false` mean "did not engage with it" rather
-than "modelled all zeroes", so keep it if defaults are ever introduced.
+**Only a touched calculator is reported**, which is what makes `roi_used: false` mean
+"did not engage with it" rather than "modelled all zeroes". Keep that guard if non-zero
+defaults are ever introduced.
+
+**A submission consumes the snapshot.** `clearRoi()` runs on success, so the figures are
+attached to exactly one lead. Without it the snapshot outlived the enquiry that produced
+it and the *next* submission from the same tab silently inherited those numbers — a lead
+would arrive looking like it had modelled figures it never touched, which is worse than
+sending nothing. Found in production use on 2026-10-18 and fixed.
+
+The trade-off: if a visitor submits twice from one tab with the calculator still filled
+in on screen, the second lead carries no figures. That is the safe direction to fail —
+`roi_used: false` is honest, whereas stale numbers actively mislead whoever picks the
+lead up.
 
 Fields are flattened to prefixed top-level keys (`roi_acv`, `roi_multiple`,
 `roi_summary`, …) because GoHighLevel maps inbound webhook fields one at a time and
@@ -140,6 +150,7 @@ Mike's pipeline:
 | Malformed JSON body | 400 `invalid_json` ✓ |
 | 500-char field | truncated to 300 before forwarding ✓ |
 | Webhook unreachable | 502, form shows an error and **keeps** what was typed ✓ |
+| Submit twice from one tab, touching the calculator only before the first | first carries the figures, second `roi_used: false` ✓ |
 | Submit with calculator untouched | `roi_used: false`, zero `roi_*` fields ✓ |
 | Submit after touching it, same page | full ROI block, matches the on-screen figures ✓ |
 | Model on `/roi-calculator`, submit on `/pricing` | snapshot survives client nav ✓ |

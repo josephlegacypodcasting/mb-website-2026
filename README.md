@@ -91,6 +91,16 @@ Two dependencies the original pulls in are deliberately not reproduced:
 - **lucide-react** → the three icons actually used are inlined in
   [`components/icons.tsx`](components/icons.tsx).
 
+## Favicon
+
+`app/icon.png` — Next picks this up by convention and injects the `<link rel="icon">`.
+
+It is an **`m` over `b` monogram cut from the logo's own letterforms**, not a redrawn
+mark, on the brand purple. The full stacked wordmark was tried first: it survives 32px
+but turns to mush at 16px, which is what Chrome renders in a tab on a 1x display. The
+logo also ships with a transparent background, so it would disappear against a dark tab
+strip — hence the solid purple ground.
+
 ## Contact form
 
 The form posts to `/api/lead`, a server route that forwards to a LeadConnector
