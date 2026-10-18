@@ -5,3 +5,7 @@ out
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts
+.vercel
+# Broad on purpose: `vercel env pull` writes a .env holding the real webhook.
+.env*
+!.env.example

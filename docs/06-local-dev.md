@@ -9,9 +9,9 @@ Live at **<https://marketbetter.io>** and **<https://mb-website-2026.vercel.app>
 custom domain was attached outside this project's records; Vercel lists three more
 domains on the Production environment that have not been audited yet.
 
-> **The contact form is not collecting leads in production.** `POST /api/lead` returns
-> `500 {"error":"not_configured"}` on both hosts: `LEAD_WEBHOOK_URL` is not set in the
-> Vercel project. Prospects see an error and their details are lost. Fix below.
+`LEAD_WEBHOOK_URL` is set on the Production environment as a **Secret** type, added
+with `vercel env add` rather than through the dashboard — see the gap notes below for
+why the dashboard route was a dead end.
 
 ## Run it
 
@@ -182,11 +182,19 @@ it is read from the environment at runtime.
    and was kept deliberately — but it is prospect-facing and now flows into the CRM too,
    so it needs a deliberate answer rather than inheritance: correct the cost basis to 24
    months, or relabel the panel. → **Joseph / Mike.**
-2. **`LEAD_WEBHOOK_URL` is not set in Vercel — live and broken right now.** The route
-   returns 500 and the form shows an error, which is the designed behaviour (better than
-   failing silently) but means the public site collects nothing.
+2. **`LEAD_WEBHOOK_URL` — resolved 2026-10-18, but read this before touching it again.**
+   It is set on Production as a Secret, which means it cannot be read back from Vercel
+   or pulled with `vercel env pull`. The only remaining copies are this machine's
+   gitignored `.env.local` and GoHighLevel itself. If both are lost, the webhook has to
+   be regenerated in GHL and re-mapped.
 
-   Two traps cost us time here, both worth recording:
+   The command that worked, after the dashboard did not:
+
+   ```bash
+   vercel link && vercel env add LEAD_WEBHOOK_URL production
+   ```
+
+   Three traps cost real time here, all worth recording:
 
    - On the current dashboard, environment variables are **not** a top-level settings
      page. They live inside each environment: *Settings → Environments → click the
@@ -195,7 +203,11 @@ it is read from the environment at runtime.
      variables being paywalled. They are not; Vercel's docs state the 64 KB variable
      allowance applies to "developers on all plans".
    - **Variables do not apply to existing deployments.** After adding one you must
-     redeploy, or push a commit, before it takes effect.
+     redeploy, or push a commit, before it takes effect. A deployment created before the
+     variable existed keeps returning 500 no matter how correctly the variable is set.
+   - `npx` fails with `ENOENT: uv_cwd` when the shell's working directory no longer
+     exists — it looks like an npm or Vercel fault but is neither. `cd` somewhere real
+     first.
 3. **No team page.** Deferred to v2 per Mike, pending content.
 4. **Show link points at `marketbetter.xyz`** (the live Show). Centralized in `lib/site.ts`
    as `SHOW_URL` so the cutover is a one-line change.
