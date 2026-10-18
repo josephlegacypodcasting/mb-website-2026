@@ -1,8 +1,17 @@
 # Local development
 
-**Nothing is deployed.** Per Joseph (2026-10-16): review locally, approve, then deploy.
-No Vercel project exists yet and no domain is configured. The design was approved on
-2026-10-18, so Phase 3 is now unblocked.
+**This is deployed and public** (2026-10-18). The design was approved that day, and the
+Vercel project `legacy-medias-projects/mb-website-2026` was already connected to the
+GitHub repo, so every push to `main` deploys automatically — no CLI step, nothing to run
+by hand.
+
+Live at **<https://marketbetter.io>** and **<https://mb-website-2026.vercel.app>**. The
+custom domain was attached outside this project's records; Vercel lists three more
+domains on the Production environment that have not been audited yet.
+
+> **The contact form is not collecting leads in production.** `POST /api/lead` returns
+> `500 {"error":"not_configured"}` on both hosts: `LEAD_WEBHOOK_URL` is not set in the
+> Vercel project. Prospects see an error and their details are lost. Fix below.
 
 ## Run it
 
@@ -173,9 +182,20 @@ it is read from the environment at runtime.
    and was kept deliberately — but it is prospect-facing and now flows into the CRM too,
    so it needs a deliberate answer rather than inheritance: correct the cost basis to 24
    months, or relabel the panel. → **Joseph / Mike.**
-2. **`LEAD_WEBHOOK_URL` must be set in Vercel** before Phase 3. If it is missing the route
-   returns 500 and the form shows an error — chosen over failing silently, but it means a
-   deploy without the variable collects nothing.
+2. **`LEAD_WEBHOOK_URL` is not set in Vercel — live and broken right now.** The route
+   returns 500 and the form shows an error, which is the designed behaviour (better than
+   failing silently) but means the public site collects nothing.
+
+   Two traps cost us time here, both worth recording:
+
+   - On the current dashboard, environment variables are **not** a top-level settings
+     page. They live inside each environment: *Settings → Environments → click the
+     `Production` row*. The "Create Environment" button on that same page creates custom
+     pre-production environments, which **is** a Pro feature — easy to mistake for
+     variables being paywalled. They are not; Vercel's docs state the 64 KB variable
+     allowance applies to "developers on all plans".
+   - **Variables do not apply to existing deployments.** After adding one you must
+     redeploy, or push a commit, before it takes effect.
 3. **No team page.** Deferred to v2 per Mike, pending content.
 4. **Show link points at `marketbetter.xyz`** (the live Show). Centralized in `lib/site.ts`
    as `SHOW_URL` so the cutover is a one-line change.

@@ -26,7 +26,7 @@ it deploy?" and "is the cutover safe?" never have to be debugged at the same tim
 |---|---|---|
 | 1 | Rebuild locally, pick a direction | **Done — this design approved 2026-10-18** |
 | 2 | v2 content (team page, design polish) | Backlog |
-| 3 | Deploy to Vercel | Unblocked, not started |
+| 3 | Deploy to Vercel | **Live** — <https://marketbetter.io> (form needs `LEAD_WEBHOOK_URL`) |
 | 4 | Domain cutover: site → `marketbetter.xyz`, Show relocated | Deferred |
 | 5 | Consolidate onto `marketbetter.io` | Deferred |
 | 6 | Email migration LM → MB on `.io` | Separate project, depends on Phase 5 |
