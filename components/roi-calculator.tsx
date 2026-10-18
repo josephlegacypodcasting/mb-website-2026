@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRoi } from "@/components/roi-context";
 
 const MONTHS = 12;
 const money = (value: number) => `$${Math.round(value).toLocaleString()}`;
@@ -64,6 +65,19 @@ export function RoiCalculator() {
   const [costPerAppointment, setCostPerAppointment] = useState(0);
   const [renewalRate, setRenewalRate] = useState(0);
 
+  const { reportRoi } = useRoi();
+  const [touched, setTouched] = useState(false);
+
+  // Every control goes through this. The snapshot is only reported once the
+  // prospect has actually moved something, so a lead never carries numbers
+  // they did not choose.
+  const track =
+    <T,>(set: (value: T) => void) =>
+    (value: T) => {
+      setTouched(true);
+      set(value);
+    };
+
   // Same model as Lovable's: year one from new deals, year two from renewals,
   // cost is twelve months of retainer plus per-appointment fees.
   const result = useMemo(() => {
@@ -89,6 +103,38 @@ export function RoiCalculator() {
     };
   }, [acv, appointments, closeRate, retainer, costPerAppointment, renewalRate]);
 
+  useEffect(() => {
+    if (!touched) return;
+
+    reportRoi({
+      acv,
+      appointmentsPerMonth: appointments,
+      closeRatePct: closeRate,
+      monthlyRetainer: retainer,
+      costPerAppointment,
+      renewalRatePct: renewalRate,
+      dealsPerMonth: result.dealsPerMonth,
+      dealsYear1: result.yearOneDeals,
+      revenueYear1: result.yearOneRevenue,
+      renewedDealsYear2: result.renewedDeals,
+      revenueYear2: result.yearTwoRevenue,
+      totalInvestment: result.yearOneCost,
+      netReturn: result.netReturn,
+      multiple: result.roi,
+      costBasisMonths: MONTHS,
+    });
+  }, [
+    touched,
+    result,
+    acv,
+    appointments,
+    closeRate,
+    retainer,
+    costPerAppointment,
+    renewalRate,
+    reportRoi,
+  ]);
+
   const numberInputClass =
     "mt-3 h-12 w-full border border-mk-border bg-mk-card px-4 font-normal outline-none focus-visible:ring-2 focus-visible:ring-mk-accent";
 
@@ -107,7 +153,7 @@ export function RoiCalculator() {
             step={1000}
             value={acv}
             display={money(acv)}
-            onChange={setAcv}
+            onChange={track(setAcv)}
           />
           <Slider
             label="New appointments set per month"
@@ -116,7 +162,7 @@ export function RoiCalculator() {
             step={1}
             value={appointments}
             display={`${appointments}`}
-            onChange={setAppointments}
+            onChange={track(setAppointments)}
           />
           <Slider
             label="Close rate on appointments set"
@@ -125,7 +171,7 @@ export function RoiCalculator() {
             step={5}
             value={closeRate}
             display={`${closeRate}%`}
-            onChange={setCloseRate}
+            onChange={track(setCloseRate)}
           />
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2">
@@ -136,7 +182,10 @@ export function RoiCalculator() {
                 min={0}
                 step={500}
                 value={retainer}
-                onChange={(e) => setRetainer(Number(e.target.value) || 0)}
+                onChange={(e) => {
+                  setTouched(true);
+                  setRetainer(Number(e.target.value) || 0);
+                }}
                 className={numberInputClass}
               />
             </label>
@@ -147,9 +196,10 @@ export function RoiCalculator() {
                 min={0}
                 step={50}
                 value={costPerAppointment}
-                onChange={(e) =>
-                  setCostPerAppointment(Math.max(0, Number(e.target.value) || 0))
-                }
+                onChange={(e) => {
+                  setTouched(true);
+                  setCostPerAppointment(Math.max(0, Number(e.target.value) || 0));
+                }}
                 className={numberInputClass}
               />
             </label>
@@ -162,7 +212,7 @@ export function RoiCalculator() {
             step={5}
             value={renewalRate}
             display={`${renewalRate}%`}
-            onChange={setRenewalRate}
+            onChange={track(setRenewalRate)}
           />
         </div>
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight } from "./icons";
 import { submitLead, type LeadStatus } from "@/lib/submit-lead";
+import { useRoi } from "@/components/roi-context";
 
 /*
  * The footer doubles as the contact section (#contact), which the pricing CTAs
@@ -15,6 +16,8 @@ import { submitLead, type LeadStatus } from "@/lib/submit-lead";
  */
 export function SiteFooter() {
   const [status, setStatus] = useState<LeadStatus>("idle");
+  // Whatever the prospect modelled in the ROI calculator this visit.
+  const { snapshot } = useRoi();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,7 +25,7 @@ export function SiteFooter() {
     setStatus("sending");
 
     try {
-      await submitLead(form, "mike");
+      await submitLead(form, "mike", snapshot);
       setStatus("sent");
       form.reset();
     } catch (error) {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { SiteHeader } from "@/components/header";
 import { SiteFooter } from "@/components/footer";
+import { RoiProvider } from "@/components/roi-context";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -25,9 +26,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={poppins.variable}>
       <body>
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        {/* Wraps header through footer so an ROI snapshot reaches the contact
+            form, which lives in the footer. */}
+        <RoiProvider>
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+        </RoiProvider>
       </body>
     </html>
   );

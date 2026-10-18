@@ -75,6 +75,28 @@ This is deliberately **not** what the Lovable original does. That writes the sam
 straight into a Supabase `lead_submissions` table using a publishable key baked into its
 public bundle, which leaves the table open to anyone.
 
+### ROI figures ride along
+
+If a visitor moves anything in the ROI calculator, what they modelled is attached to the
+contact form they submit afterwards. The calculator and the form live in different parts
+of the tree, so a `RoiProvider` in the root layout carries the snapshot between them —
+through React state across client navigation, and through `sessionStorage` across a full
+reload. It is per-tab and never leaves the browser except on an actual submission.
+
+Only a *touched* calculator is reported: a lead with `roi_used: false` means the visitor
+did not engage with it, not that they modelled all zeroes.
+
+Fields arrive flattened (`roi_acv`, `roi_multiple`, `roi_summary`, …) because
+GoHighLevel maps inbound webhook fields one at a time and nested paths are awkward
+there. `roi_summary` is one human-readable line for whoever picks the lead up. The block
+is client-supplied, so the server coerces every field and drops the whole snapshot if
+any of it is missing or malformed — a half-populated model would read as a real one.
+
+`roi_cost_basis_months` is included because this build reproduces the original's
+cost basis: it divides 24 months of revenue by **12** months of cost while still
+labelling the result "24-month projected ROI". That is the original's behaviour, kept
+deliberately, but it means the multiple is not comparable to a differently-based one.
+
 Verified end-to-end against a local echo server rather than the live CRM, so no test
 leads were written: valid submissions return 200 with the expected payload, missing or
 malformed fields return 400, over-long fields are truncated to 300 characters, and an
