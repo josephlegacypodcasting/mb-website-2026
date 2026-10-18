@@ -95,11 +95,16 @@ Two dependencies the original pulls in are deliberately not reproduced:
 
 `app/icon.png` — Next picks this up by convention and injects the `<link rel="icon">`.
 
-It is an **`m` over `b` monogram cut from the logo's own letterforms**, not a redrawn
-mark, on the brand purple. The full stacked wordmark was tried first: it survives 32px
-but turns to mush at 16px, which is what Chrome renders in a tab on a 1x display. The
-logo also ships with a transparent background, so it would disappear against a dark tab
-strip — hence the solid purple ground.
+The full stacked wordmark, ink on the brand sand, matching the header. Margins are
+tight (6%) so the mark fills as much of the square as it can.
+
+The sand ground is not decoration: `public/mb-logo.png` is transparent, so without it
+the near-black wordmark would disappear against a dark tab strip.
+
+Known limit, accepted deliberately: a two-line wordmark reads cleanly at 32px (retina
+tabs, bookmarks, history) but blurs at 16px, which is what a tab renders on a 1x
+display. An `m`-over-`b` monogram cut from the same letterforms stays sharp at both and
+is the fallback if the blur ever becomes annoying.
 
 ## Contact form
 
