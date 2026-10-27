@@ -10,6 +10,7 @@ const PAGES = [
   { href: "/how-it-works", label: "How It Works", exact: false },
   { href: "/pricing", label: "Pricing", exact: false },
   { href: "/roi-calculator", label: "ROI", exact: false },
+  { href: "/team", label: "Team", exact: false },
 ];
 
 export function SiteHeader() {

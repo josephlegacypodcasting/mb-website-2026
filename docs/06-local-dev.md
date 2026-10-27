@@ -65,7 +65,7 @@ for the sake of the old JS config format.
 All figures below were read off the running page or measured programmatically, not
 assumed from the source.
 
-- `npm run build` — compiles clean; the four pages prerender static, `/api/lead` is
+- `npm run build` — compiles clean; the five pages prerender static, `/api/lead` is
   served on demand
 - All routes return HTTP 200 on the dev server, no console errors
 
@@ -208,7 +208,9 @@ it is read from the environment at runtime.
    - `npx` fails with `ENOENT: uv_cwd` when the shell's working directory no longer
      exists — it looks like an npm or Vercel fault but is neither. `cd` somewhere real
      first.
-3. **No team page.** Deferred to v2 per Mike, pending content.
+3. **Team page is missing sixteen roles.** `/team` ships with all eighteen portraits,
+   but only Mike's and Anna's titles — the two the Show's own team page records. The
+   rest render name-only until Mike supplies them; they go in `lib/team.ts`.
 4. **Show link points at `marketbetter.xyz`** (the live Show). Centralized in `lib/site.ts`
    as `SHOW_URL` so the cutover is a one-line change.
 5. **Testimonials have no photos/logos** — text only. The Lovable v1 had a logo wall

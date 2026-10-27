@@ -25,7 +25,7 @@ it deploy?" and "is the cutover safe?" never have to be debugged at the same tim
 | Phase | Goal | State |
 |---|---|---|
 | 1 | Rebuild locally, pick a direction | **Done — this design approved 2026-10-18** |
-| 2 | v2 content (team page, design polish) | Backlog |
+| 2 | v2 content (team page, design polish) | Team page shipped; design polish still backlog |
 | 3 | Deploy to Vercel | **Live** — <https://marketbetter.io> (form needs `LEAD_WEBHOOK_URL`) |
 | 4 | Domain cutover: site → `marketbetter.xyz`, Show relocated | Deferred |
 | 5 | Consolidate onto `marketbetter.io` | Deferred |
@@ -61,6 +61,22 @@ npm run dev -- -p 3200
 | `/how-it-works` | One funnel. Four steps. |
 | `/pricing` | One engine, two ways to pay |
 | `/roi-calculator` | Pipeline / ROI model |
+| `/team` | One engine. One team behind it |
+
+## Team page
+
+`/team` renders [`lib/team.ts`](lib/team.ts) — eighteen people, one 4:5 portrait each in
+`public/team`, picked so every frame is a neutral-background studio shot rather than a
+mix of square avatars on coloured ones.
+
+Two roles are filled in, Mike's and Anna's, both taken from the Show's existing
+"The Team" page on `marketbetter.xyz`. The other sixteen are blank, and a blank role
+renders as name-only rather than as a guess — nothing in either repo or on the live
+properties records them. They are still outstanding from Mike; filling them in is a
+one-line edit each in `lib/team.ts` and no other file needs touching.
+
+The Show's team page also lists Logan Lyles (Lead Host) and Eric West (Director of
+Sales). Neither had a headshot in the source folder, so neither is on this page.
 
 ## Design tokens
 
@@ -156,7 +172,7 @@ typed instead of clearing it.
 
 ## Verified
 
-Production build is clean — all four pages prerender as static, with `/api/lead` served
+Production build is clean — all five pages prerender as static, with `/api/lead` served
 on demand. Checked at 375px and
 768px on every route by sweeping the DOM and comparing each element's
 `getBoundingClientRect().right` against `clientWidth`: zero overflowing elements,
