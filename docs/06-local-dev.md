@@ -208,9 +208,9 @@ it is read from the environment at runtime.
    - `npx` fails with `ENOENT: uv_cwd` when the shell's working directory no longer
      exists — it looks like an npm or Vercel fault but is neither. `cd` somewhere real
      first.
-3. **Team page is missing sixteen roles.** `/team` ships with all eighteen portraits,
-   but only Mike's and Anna's titles — the two the Show's own team page records. The
-   rest render name-only until Mike supplies them; they go in `lib/team.ts`.
+3. **Two team titles are contested.** `/team` now carries a role for all eighteen, but
+   Carol-Lynne's and Anna's come from sources that disagree with each other — see the
+   note at the top of `lib/team.ts`. Both are flagged to Joseph; neither blocks anything.
 4. **Show link points at `marketbetter.xyz`** (the live Show). Centralized in `lib/site.ts`
    as `SHOW_URL` so the cutover is a one-line change.
 5. **Testimonials have no photos/logos** — text only. The Lovable v1 had a logo wall

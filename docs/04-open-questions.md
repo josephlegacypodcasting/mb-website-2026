@@ -19,8 +19,10 @@ be better if someone has it.
 - [ ] Vercel account (or create one for Market Better)
 - [ ] Git host — GitHub org for Market Better, or a personal repo for now?
 - [ ] Lovable project access — for content/copy reference and any custom imagery
-- [x] Team photos — received, and the team page now ships at `/team`. Still outstanding:
-      the job titles for sixteen of the eighteen people. → **Mike.**
+- [x] Team photos — received, and the team page ships at `/team` with a role for everyone.
+      Two titles need a word from Joseph: Carol-Lynne's (Content Strategist or Producer?)
+      and Anna's (Account Manager or Director of Marketing?). Sources disagree; see
+      `lib/team.ts`.
 
 **Dark sections?** The Show uses dark backgrounds in places, and so do we (the ROI panel,
 the featured pricing card, the footer). Should the corporate site keep them?

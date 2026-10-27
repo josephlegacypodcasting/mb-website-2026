@@ -69,14 +69,22 @@ npm run dev -- -p 3200
 `public/team`, picked so every frame is a neutral-background studio shot rather than a
 mix of square avatars on coloured ones.
 
-Two roles are filled in, Mike's and Anna's, both taken from the Show's existing
-"The Team" page on `marketbetter.xyz`. The other sixteen are blank, and a blank role
-renders as name-only rather than as a guess — nothing in either repo or on the live
-properties records them. They are still outstanding from Mike; filling them in is a
-one-line edit each in `lib/team.ts` and no other file needs touching.
+Everyone has a role. Mike's and Anna's come from the Show's existing "The Team" page on
+`marketbetter.xyz`; the other sixteen come from Joseph's internal role table
+(2026-10-27). That table assigns people to roles rather than the other way round, so
+titles repeat — four A/V Editors, three Content Strategists, two of most of the rest —
+and they are spelled as it spells them, not as its shorter companion list does.
 
-The Show's team page also lists Logan Lyles (Lead Host) and Eric West (Director of
-Sales). Neither had a headshot in the source folder, so neither is on this page.
+Two conflicts in those sources are resolved in `lib/team.ts` and flagged to Joseph:
+Carol-Lynne is a Content Strategist in the role table but a Producer in the companion
+list (the table wins, being the one that defines the roles), and Anna is an Account
+Manager in that same table but Director of Marketing on the published Show page (the
+Show page wins). A role left blank would render as name-only rather than as a guess, so
+that remains the way to handle anyone whose title is unsettled.
+
+People in the role table with no headshot, and so not on this page: Grant, Mari and
+Osmond, Louis (Anfloy), and an unnamed Social Media Manager. The Show's team page
+additionally lists Logan Lyles (Lead Host) and Eric West (Director of Sales).
 
 ## Design tokens
 
