@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { RoiCalculator } from "@/components/roi-calculator";
+
+export const metadata: Metadata = {
+  title: "ROI Calculator | Market Better",
+  description:
+    "Model the return from qualified meetings using your own contract value, close rate, retainer, and cost per appointment.",
+};
 
 export default function RoiCalculatorPage() {
   return (

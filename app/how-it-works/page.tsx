@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "How It Works | Market Better",
+  description:
+    "Video, content, inbound, and outbound as one continuous funnel: awareness at the top, nurture in the middle, the booked meeting at the bottom.",
+};
+
 const FUNNEL_STEPS = [
   {
     number: "01",

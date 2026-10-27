@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { Check, ArrowRight } from "@/components/icons";
+
+export const metadata: Metadata = {
+  title: "Pricing | Market Better",
+  description:
+    "One engine — content, lead generation, and the data dashboard — with two ways to pay: per booked appointment, or a flat monthly fee.",
+};
 
 const ENGINE = [
   {
