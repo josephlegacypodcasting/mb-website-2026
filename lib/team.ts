@@ -6,6 +6,11 @@
  * frame on a neutral background rather than a square avatar on a coloured
  * one, so the grid reads as one set. The source PNGs are not in this repo.
  *
+ * Names are first name only, per Mike (Slack, 2026-11-02), with the two
+ * Valerias distinguished as "Valeria L." and "Valeria T." — his spelling.
+ * The slugs keep the surnames, so the photo filenames in public/team are
+ * untouched and stay unambiguous.
+ *
  * Roles come from two places. Mike's and Anna's are from the Show's existing
  * "The Team" page on marketbetter.xyz. The other sixteen are from Joseph's
  * internal role table (2026-10-27), which assigns people to roles rather than
@@ -37,23 +42,23 @@ export type TeamMember = {
 };
 
 export const TEAM: TeamMember[] = [
-  { slug: "mike-mcgrath", name: "Mike McGrath", role: "Chief Executive Officer" },
-  { slug: "anna-mccoy", name: "Anna McCoy", role: "Director of Marketing" },
-  { slug: "adriana-gastelum", name: "Adriana Gastelum", role: "Delivery Coordinator" },
+  { slug: "mike-mcgrath", name: "Mike", role: "Chief Executive Officer" },
+  { slug: "anna-mccoy", name: "Anna", role: "Director of Marketing" },
+  { slug: "adriana-gastelum", name: "Adriana", role: "Delivery Coordinator" },
   { slug: "alejandra", name: "Alejandra", role: "Business Operations Manager" },
   { slug: "bilal", name: "Bilal", role: "A/V Editor" },
   { slug: "carol-lynne", name: "Carol-Lynne", role: "Content Strategist" },
-  { slug: "chris", name: "Chris Jordan", role: "Content Strategist" },
+  { slug: "chris", name: "Chris", role: "Content Strategist" },
   { slug: "dima", name: "Dima", role: "Outbound Strategist" },
   { slug: "filip", name: "Filip", role: "A/V Editor" },
-  { slug: "joseph-clavijo", name: "Joseph Clavijo", role: "AI Tech Specialist" },
+  { slug: "joseph-clavijo", name: "Joseph", role: "AI Tech Specialist" },
   { slug: "luka", name: "Luka", role: "Graphic Designer" },
   { slug: "paty", name: "Paty", role: "Delivery Coordinator" },
-  { slug: "quinten", name: "Quinten Johnson", role: "Content Strategist" },
+  { slug: "quinten", name: "Quinten", role: "Content Strategist" },
   { slug: "tessa", name: "Tessa", role: "Content Producer" },
   { slug: "valentina", name: "Valentina", role: "Graphic Designer" },
-  { slug: "valeria-lopez", name: "Valeria Lopez", role: "A/V Editor" },
-  { slug: "valeria-torres", name: "Valeria Torres", role: "Content Producer" },
+  { slug: "valeria-lopez", name: "Valeria L.", role: "A/V Editor" },
+  { slug: "valeria-torres", name: "Valeria T.", role: "Content Producer" },
   { slug: "zeljko", name: "Zeljko", role: "A/V Editor" },
 ];
 
