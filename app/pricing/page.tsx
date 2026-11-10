@@ -46,9 +46,9 @@ const ENGINE = [
 const OPTIONS = [
   {
     kicker: "Option 01",
-    name: "Pay Per Call",
-    price: 4900,
-    plus: "$600 per booked appointment",
+    name: "Pay Per Performance",
+    price: 5900,
+    plus: "$400 per booked sales call",
     description: "Scale your booked appointments up or down, month by month.",
     bullets: [
       "Only pay for appointments that land on your calendar",
@@ -59,8 +59,8 @@ const OPTIONS = [
   },
   {
     kicker: "Option 02",
-    name: "Flat Fee",
-    price: 7500,
+    name: "Flat Monthly Retainer",
+    price: 7900,
     plus: "One flat price. Everything included.",
     description: "One predictable number every month. No variables.",
     bullets: [
