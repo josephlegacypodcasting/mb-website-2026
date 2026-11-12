@@ -63,9 +63,11 @@ Two things need a decision before this is useful in the CRM:
   *mapped*. The inbound-webhook trigger only offers fields it has actually seen, so a
   sample carrying `roi_*` was sent on 2026-10-18 (labelled `TEST - please ignore (ROI
   fields sample)`) specifically so they appear in the mapper. Delete it once mapped.
-- **The multiple is not comparable across versions** — see the ROI gap in
-  [local dev](06-local-dev.md#known-gaps-before-this-is-shippable). `roi_cost_basis_months`
-  rides along so the figure is never read as if its cost basis were the full 24 months.
+- **Map `roi_sales_cycle_days` too.** Added 2026-11-12 with the sales-cycle input; it
+  will only appear in the GHL mapper once a lead carrying it has been received.
+- **The multiple uses a 12-month cost basis** — 24 months of collected revenue over 12
+  months of investment, as the panel states. `roi_cost_basis_months` rides along so the
+  figure is never read as if its cost basis were the full 24 months.
 
 ## Worth raising with Mike now
 

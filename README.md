@@ -167,10 +167,9 @@ there. `roi_summary` is one human-readable line for whoever picks the lead up. T
 is client-supplied, so the server coerces every field and drops the whole snapshot if
 any of it is missing or malformed — a half-populated model would read as a real one.
 
-`roi_cost_basis_months` is included because this build reproduces the original's
-cost basis: it divides 24 months of revenue by **12** months of cost while still
-labelling the result "24-month projected ROI". That is the original's behaviour, kept
-deliberately, but it means the multiple is not comparable to a differently-based one.
+`roi_cost_basis_months` is included because the multiple divides 24 months of
+*collected* revenue by **12** months of investment, and is labelled that way on the
+panel. `roi_sales_cycle_days` carries the sales-cycle input added on 2026-11-12.
 
 Verified end-to-end against a local echo server rather than the live CRM, so no test
 leads were written: valid submissions return 200 with the expected payload, missing or
@@ -191,9 +190,12 @@ meetings booked" row were forced onto a single line at every width, measuring 45
 a 375px viewport. Because the section clips overflow, the third pill was silently cut off
 rather than scrollable. They now wrap below `lg`.
 
-ROI model cross-checked against the original: ACV $50,000, 20 appointments/month, 25%
-close, $7,500 retainer, $600 per appointment, 50% renewal → $3,000,000 year one,
-$1,500,000 year two, $234,000 invested, **19.2x**.
+ROI model (`calculateRoi` in `lib/roi.ts`) is Mike's developer brief of 2026-11-11,
+ported as written: a sales cycle delays signing, and each contract is collected as 12
+monthly payments instead of all at once. It matches all four of the brief's test cases
+exactly — e.g. ACV $20,000, 6 appointments, 30% close, 90-day cycle, $3,500 retainer,
+$400 per appointment, 0% renewal → 16.2 deals, $135,000 year one, $288,000 year two,
+$70,800 invested, **6.0x**.
 
 ## Provenance
 

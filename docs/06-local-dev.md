@@ -89,11 +89,12 @@ measuring 452px inside a 375px viewport. Because the section clips overflow, the
 pill was silently cut off rather than scrollable — a screenshot would not have shown it.
 They now wrap below `lg`.
 
-**ROI model**, cross-checked arithmetically against the original rather than read off the
-screen: ACV $325,000, 15 appointments/month, 40% close, $3 retainer, $40/appointment, 55%
-renewal → 6.0 deals/mo, 72 deals year 1, $23,400,000 year 1, 39.6 renewals, $12,870,000
-year 2, $7,236 invested, **5012.4x** ✓ — matching Mike's design exactly, inflated cost
-basis and all (see the gap below).
+**ROI model**, replaced on 2026-11-12 by the calculation in Mike's developer brief
+(2026-11-11): a sales-cycle input delays signing, and each contract is collected as 12
+monthly payments rather than counted in full on signing. `calculateRoi` in `lib/roi.ts`
+is the brief's function ported as written, and reproduces all four of its test cases
+exactly (A: 16.2 deals / $135,000 / $288,000 / $70,800 / **6.0x**; B 6.1x; C 7.4x;
+D 9.3x).
 
 
 ## Contact forms
@@ -142,10 +143,9 @@ Fields are flattened to prefixed top-level keys (`roi_acv`, `roi_multiple`,
 nested paths are awkward to wire up there. `roi_summary` is a single human-readable line
 so whoever picks the lead up sees the context without expanding fifteen custom fields.
 
-`roi_cost_basis_months` travels with the numbers because **this build divides 24 months
-of revenue by only 12 months of cost** while still labelling the result "24-month
-projected ROI" — reproduced from Lovable. The multiple is therefore not comparable to a
-correctly-based one, and roughly double what it would otherwise be. See the gap below.
+`roi_cost_basis_months` travels with the numbers because the multiple divides 24 months
+of collected revenue by 12 months of investment, as the panel now says outright.
+`roi_sales_cycle_days` (added 2026-11-12) needs mapping in GoHighLevel like the others.
 
 ### Verification
 
@@ -176,12 +176,9 @@ it is read from the environment at runtime.
 
 ## Known gaps before this is shippable
 
-1. **The ROI multiple is inflated by its own label.** The panel says "24-month
-   projected ROI" but divides 24 months of revenue by only 12 months of cost, so the
-   figure is roughly double what the label implies. This reproduces Lovable faithfully
-   and was kept deliberately — but it is prospect-facing and now flows into the CRM too,
-   so it needs a deliberate answer rather than inheritance: correct the cost basis to 24
-   months, or relabel the panel. → **Joseph / Mike.**
+1. ~~**The ROI multiple is inflated by its own label.**~~ Resolved 2026-11-12 by Mike's
+   brief: the panel is relabelled "Revenue collected over 24 months, divided by total
+   investment", and revenue is now collected monthly rather than counted on signing.
 2. **`LEAD_WEBHOOK_URL` — resolved 2026-10-18, but read this before touching it again.**
    It is set on Production as a Secret, which means it cannot be read back from Vercel
    or pulled with `vercel env pull`. The only remaining copies are this machine's

@@ -68,6 +68,7 @@ function roiFields(roi: RoiSnapshot | null) {
     roi_acv: round(roi.acv),
     roi_appointments_per_month: round(roi.appointmentsPerMonth, 1),
     roi_close_rate_pct: round(roi.closeRatePct, 1),
+    roi_sales_cycle_days: round(roi.salesCycleDays),
     roi_monthly_retainer: round(roi.monthlyRetainer),
     roi_cost_per_appointment: round(roi.costPerAppointment),
     roi_renewal_rate_pct: round(roi.renewalRatePct, 1),
