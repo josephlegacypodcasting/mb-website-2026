@@ -5,6 +5,7 @@ import { useRoi } from "@/components/roi-context";
 import { ROI_ENGAGEMENT_MONTHS, calculateRoi } from "@/lib/roi";
 
 const money = (value: number) => `$${Math.round(value).toLocaleString()}`;
+const months = (value: number) => `${value} ${value === 1 ? "month" : "months"}`;
 
 function Slider({
   label,
@@ -68,6 +69,7 @@ export function RoiCalculator() {
   // Defaults from Mike's developer brief (2026-11-11). They are only a
   // starting point on screen: nothing is reported to the contact form until
   // the prospect moves a control (see `track`).
+  const [programMonths, setProgramMonths] = useState(ROI_ENGAGEMENT_MONTHS);
   const [acv, setAcv] = useState(20000);
   const [appointments, setAppointments] = useState(6);
   const [closeRate, setCloseRate] = useState(30);
@@ -99,8 +101,18 @@ export function RoiCalculator() {
         retainer,
         cpa: costPerAppointment,
         renew: renewalRate / 100,
+        programMonths,
       }),
-    [acv, appointments, closeRate, salesCycle, retainer, costPerAppointment, renewalRate],
+    [
+      acv,
+      appointments,
+      closeRate,
+      salesCycle,
+      retainer,
+      costPerAppointment,
+      renewalRate,
+      programMonths,
+    ],
   );
 
   useEffect(() => {
@@ -124,10 +136,13 @@ export function RoiCalculator() {
       // The server requires every field to be finite; 0 stands in for "no
       // investment to divide by", as the on-screen "—" does.
       multiple: result.multiple ?? 0,
-      costBasisMonths: ROI_ENGAGEMENT_MONTHS,
+      // The investment covers exactly the program's months, so the program
+      // length already travels to the CRM as roi_cost_basis_months.
+      costBasisMonths: programMonths,
     });
   }, [
     touched,
+    programMonths,
     result,
     acv,
     appointments,
@@ -150,6 +165,16 @@ export function RoiCalculator() {
             Your numbers
           </p>
 
+          <Slider
+            label="Length of program"
+            helper="Months of appointment setting you pay for."
+            min={0}
+            max={12}
+            step={1}
+            value={programMonths}
+            display={months(programMonths)}
+            onChange={track(setProgramMonths)}
+          />
           <Slider
             label="Average contract value (ACV)"
             min={0}
@@ -259,7 +284,7 @@ export function RoiCalculator() {
               value={money(result.revY2)}
             />
             <Stat
-              label="Total investment (12 months)"
+              label={`Total investment (${months(programMonths)})`}
               value={money(result.investment)}
             />
             <Stat

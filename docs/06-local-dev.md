@@ -96,6 +96,12 @@ is the brief's function ported as written, and reproduces all four of its test c
 exactly (A: 16.2 deals / $135,000 / $288,000 / $70,800 / **6.0x**; B 6.1x; C 7.4x;
 D 9.3x).
 
+**Length of program** (added 2026-11-24, Mike's request for 3/6/12-month programs): a
+0–12 month slider, default 12, that replaces the brief's fixed 12-month engagement.
+Appointments are set and the investment paid only during those months; the 24-month
+collection horizon is unchanged. At the default the brief's test cases still pass. The
+length reaches the CRM as `roi_cost_basis_months`, so no new GHL field is needed.
+
 
 ## Contact forms
 

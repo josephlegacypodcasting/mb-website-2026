@@ -7,6 +7,12 @@ export type RoiInputs = {
   close: number;
   /** Days from appointment to signed deal. */
   cycleDays: number;
+  /**
+   * Length of the program in months (0–12). Appointments are set, and the
+   * retainer and per-appointment fees paid, only during these months.
+   * Defaults to 12, the brief's original engagement.
+   */
+  programMonths?: number;
   /** Monthly retainer, dollars. */
   retainer: number;
   /** Cost per appointment, dollars. */
@@ -27,7 +33,7 @@ export type RoiResult = {
   multiple: number | null;
 };
 
-/** Months of appointment setting, which is also the investment period. */
+/** Default program length: months of appointment setting and investment. */
 export const ROI_ENGAGEMENT_MONTHS = 12;
 const ROI_HORIZON_MONTHS = 24;
 
@@ -35,7 +41,8 @@ const ROI_HORIZON_MONTHS = 24;
  * The calculation from Mike's developer brief (2026-11-11), section 4, ported
  * as written. That brief is the source of truth; do not "tidy" the math.
  *
- * - Appointments are set in months 1–12 only.
+ * - Appointments are set in months 1–12 only (1 to the program length, now
+ *   that it is adjustable).
  * - A sales cycle of `cycleDays / 30` months delays signing. A partial month
  *   splits a month's deals across two neighbouring months.
  * - Each signed deal pays ACV/12 a month for 12 months from the month it signs,
@@ -44,7 +51,11 @@ const ROI_HORIZON_MONTHS = 24;
  * - Only months 1–24 are counted; anything later is left out.
  */
 export function calculateRoi(i: RoiInputs): RoiResult {
-  const ENGAGE = ROI_ENGAGEMENT_MONTHS;
+  // Program length (added 2026-11-24 at Mike's request, for 3/6/12-month
+  // programs). It replaces the brief's fixed ENGAGE = 12 and changes nothing
+  // else: the 24-month collection horizon stays, so a 3-month program still
+  // shows the payments its deals keep making after it ends.
+  const ENGAGE = i.programMonths ?? ROI_ENGAGEMENT_MONTHS;
   const HORIZON = ROI_HORIZON_MONTHS;
   const dealsPerMonth = i.appts * i.close;
   const cm = i.cycleDays / 30;
